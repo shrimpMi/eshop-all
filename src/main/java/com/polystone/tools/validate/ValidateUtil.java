@@ -1,5 +1,6 @@
-package com.polystone.tools.common;
+package com.polystone.tools.validate;
 
+import com.polystone.tools.common.StringUtil;
 import java.util.regex.Pattern;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
