@@ -41,6 +41,7 @@ public class HttpUtil {
     private static RequestConfig requestConfig;
     private static final int MAX_TIMEOUT = 2 * 5000;
     private static final int MAX_TOTAL = 50;
+    private static final int SLEEP_TIME = 3000;
     private static final String UTF8 = "UTF-8";
     private static HttpClientBuilder httpsClientBuilder;
     private static HttpClientBuilder httpRetryClientBuilder;
@@ -344,6 +345,11 @@ public class HttpUtil {
                     if (exception instanceof NoHttpResponseException
                         || exception instanceof ConnectTimeoutException) {
                         //              || exception instanceof SocketTimeoutException    //响应超时不重试，避免造成业务数据不一致
+                        try {
+                            Thread.sleep(SLEEP_TIME);
+                        } catch (InterruptedException e) {
+                            Log.error("", e);
+                        }
                         Log.warn("NoHttpResponseException/ConnectTimeoutException on " + executionCount + " call");
                         return true;
                     }
