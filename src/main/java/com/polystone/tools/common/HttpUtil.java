@@ -5,6 +5,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import org.apache.http.HttpResponse;
@@ -25,7 +26,6 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.CollectionUtils;
 
 /**
  * http请求工具类
@@ -76,7 +76,7 @@ public class HttpUtil {
      */
     public static String doGet(String url, Map<String, String> params) {
         String apiUrl = url;
-        if (!CollectionUtils.isEmpty(params)) {
+        if (!isEmpty(params)) {
             try {
                 apiUrl = apiUrl + buildQueryString(params);
             } catch (UnsupportedEncodingException e) {
@@ -95,7 +95,7 @@ public class HttpUtil {
      */
     public static String doGet(String url, Map<String, String> params, Map<String, Object> headers) {
         String apiUrl = url;
-        if (!CollectionUtils.isEmpty(params)) {
+        if (!isEmpty(params)) {
             try {
                 apiUrl = apiUrl + buildQueryString(params);
             } catch (UnsupportedEncodingException e) {
@@ -166,7 +166,7 @@ public class HttpUtil {
     public static String doPost(String apiUrl, Map<String, String> params) {
         HttpPost httpPost = new HttpPost(apiUrl);
         httpPost.setConfig(requestConfig);
-        if (!CollectionUtils.isEmpty(params)) {
+        if (!isEmpty(params)) {
             httpPost.setEntity(new UrlEncodedFormEntity(transferParam(params), Charset.forName(UTF8)));
         }
 
@@ -198,7 +198,7 @@ public class HttpUtil {
     public static String doRetryPost(String apiUrl, Map<String, String> params) {
         HttpPost httpPost = new HttpPost(apiUrl);
         httpPost.setConfig(requestConfig);
-        if (!CollectionUtils.isEmpty(params)) {
+        if (!isEmpty(params)) {
             httpPost.setEntity(new UrlEncodedFormEntity(transferParam(params), Charset.forName(UTF8)));
         }
 
@@ -215,7 +215,7 @@ public class HttpUtil {
     public static String doPostPayKee(String apiUrl, Map<String, Object> params) {
         HttpPost httpPost = new HttpPost(apiUrl);
         httpPost.setConfig(requestConfig);
-        if (!CollectionUtils.isEmpty(params)) {
+        if (!isEmpty(params)) {
             List<NameValuePair> pairList = new ArrayList<>(params.size());
             for (Map.Entry<String, Object> entry : params.entrySet()) {
                 NameValuePair pair = new BasicNameValuePair(entry.getKey(), entry.getValue() + "");
@@ -279,7 +279,7 @@ public class HttpUtil {
      * @return [参数说明]
      */
     public static String doPost(String apiUrl, Map<String, Object> headers, Map<String, Object> params) {
-        if (CollectionUtils.isEmpty(params)) {
+        if (isEmpty(params)) {
             return null;
         }
         HttpPost httpPost = new HttpPost(apiUrl);
@@ -303,7 +303,7 @@ public class HttpUtil {
      * @param params json对象
      */
     public static String doPost(String apiUrl, List<NameValuePair> params) {
-        if (CollectionUtils.isEmpty(params)) {
+        if (isEmpty(params)) {
             return null;
         }
         try {
@@ -327,6 +327,26 @@ public class HttpUtil {
             httpsClientBuilder = HttpClients.custom().setConnectionManager(connMgr);
         }
         return httpsClientBuilder.build();
+    }
+
+    /**
+     * 判断是否为空
+     *
+     * @param map 参数
+     * @return 返回值
+     */
+    private static boolean isEmpty(Map<?, ?> map) {
+        return map == null || map.isEmpty();
+    }
+
+    /**
+     * 判断是否为空
+     *
+     * @param list 参数
+     * @return 返回值
+     */
+    private static boolean isEmpty(Collection<?> list) {
+        return list == null || list.isEmpty();
     }
 
     /**
