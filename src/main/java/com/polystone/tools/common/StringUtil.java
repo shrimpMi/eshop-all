@@ -1,5 +1,7 @@
 package com.polystone.tools.common;
 
+import com.polystone.tools.security.SecurityUtil;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -7,6 +9,7 @@ import java.nio.charset.Charset;
 import java.util.UUID;
 import java.util.regex.Pattern;
 import org.apache.commons.codec.binary.Base64;
+import sun.misc.BASE64Decoder;
 
 /**
  * String工具类
@@ -342,6 +345,36 @@ public class StringUtil {
             }
         }
         return sb.toString();
+    }
+
+    /**
+     * 获取用户token
+     *
+     * @param str 字符串
+     * @return token
+     */
+    public static String createUserToken(String str) {
+        return SecurityUtil.getInstance().md5_16(str + System.currentTimeMillis());
+    }
+
+    /**
+     * 异或
+     *
+     * @param content 传入的参数
+     * @param key 异或秘钥 1024
+     */
+    public static String obfuscate(String content, int key) throws IOException {
+        StringBuffer result = new StringBuffer();
+        for (int i = 0; i < content.length(); i++) {
+            int chDate = content.charAt(i);
+            if (i % 2 == 1) {
+                chDate = chDate ^ key;
+            }
+            result.append((char) (chDate));
+        }
+
+        BASE64Decoder decoder = new BASE64Decoder();
+        return new String(decoder.decodeBuffer(result.toString()), "utf-8");
     }
 
 }
