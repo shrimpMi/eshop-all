@@ -823,4 +823,13 @@ public class DateUtil {
         calendar.setTime(date);
         return calendar.get(Calendar.MONTH);
     }
+
+    public static Integer getDayNum(Date time) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(time);
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH) + 1;
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        return year * 10000 + month * 100 + day;
+    }
 }
