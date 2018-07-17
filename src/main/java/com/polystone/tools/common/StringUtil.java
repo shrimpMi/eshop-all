@@ -377,4 +377,12 @@ public class StringUtil {
         return new String(decoder.decodeBuffer(result.toString()), "utf-8");
     }
 
+    /**
+     * 生成16位流水号
+     *
+     * @return 返回值
+     */
+    public static String generateSerialNum() {
+        return System.currentTimeMillis() + RandomUtil.randomNumber(3);
+    }
 }
