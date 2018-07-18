@@ -1,7 +1,12 @@
 package com.polystone.tools.common;
 
 import com.alibaba.fastjson.JSON;
+import com.polystone.tools.security.SecurityUtil;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -79,6 +84,41 @@ public class CustomHttpRequest {
     }
 
     /**
+     * 添加签名
+     *
+     * @param signKey 参数名
+     * @param keys 签名参数
+     * @return 返回值
+     */
+    public CustomHttpRequest addSign(String signKey, List<String> keys) {
+        this.params.put(signKey, buildSign(keys));
+        return this;
+    }
+
+    /**
+     * 添加签名
+     *
+     * @param signKey 参数名
+     * @return 返回值
+     */
+    public CustomHttpRequest addSign(String signKey) {
+        this.params.put(signKey, buildSign(new ArrayList<>(params.keySet())));
+        return this;
+    }
+
+    /**
+     * 添加签名
+     *
+     * @param signKey 参数名
+     * @param keys 签名参数
+     * @return 返回值
+     */
+    public CustomHttpRequest addSign(String signKey, String... keys) {
+        this.params.put(signKey, buildSign(keys));
+        return this;
+    }
+
+    /**
      * 执行post请求
      *
      * @return 返回值
@@ -128,6 +168,34 @@ public class CustomHttpRequest {
             response.setMsg("http url is empty");
         }
         return response;
+    }
+
+    /**
+     * 签名
+     *
+     * @param keys 参数
+     * @return 返回值
+     */
+    private String buildSign(List<String> keys) {
+        StringBuilder sb = new StringBuilder();
+        Collections.sort(keys);
+        for (String key : keys) {
+            if (!params.containsKey(key)) {
+                continue;
+            }
+            sb.append(params.get(key));
+        }
+        return SecurityUtil.getInstance().md5(sb.toString());
+    }
+
+    /**
+     * 签名
+     *
+     * @param keys 参数
+     * @return 返回值
+     */
+    private String buildSign(String... keys) {
+        return buildSign(Arrays.asList(keys));
     }
 
     public String getUrl() {
