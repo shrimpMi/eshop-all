@@ -125,7 +125,7 @@ public class HttpUtil {
             } else {
                 param.append("&");
             }
-            param.append(key).append("=").append(URLEncoder.encode(params.get(key), "UTF-8"));
+            param.append(key).append("=").append(URLEncoder.encode(params.get(key), UTF8));
             i++;
         }
         return param.toString();
@@ -138,12 +138,12 @@ public class HttpUtil {
      * @param httpclient httpclien
      * @return 返回结果
      */
-    private static String execute(HttpRequestBase requestBase, CloseableHttpClient httpclient) {
+    private static String _execute(HttpRequestBase requestBase, CloseableHttpClient httpclient, String charset) {
         HttpResponse response = null;
         try {
             response = httpclient.execute(requestBase);
             if (response.getEntity() != null) {
-                return EntityUtils.toString(response.getEntity(), UTF8);
+                return EntityUtils.toString(response.getEntity(), charset);
             }
         } catch (IOException e) {
             //异常输出
@@ -154,6 +154,17 @@ public class HttpUtil {
             }
         }
         return null;
+    }
+
+    /**
+     * 执行请求并返回结果
+     *
+     * @param requestBase 执行请求
+     * @param httpclient httpclien
+     * @return 返回结果
+     */
+    private static String execute(HttpRequestBase requestBase, CloseableHttpClient httpclient) {
+        return _execute(requestBase, httpclient, UTF8);
     }
 
 
@@ -233,14 +244,26 @@ public class HttpUtil {
      * @param json json对象
      */
     public static String doPost(String apiUrl, String json) {
+        return doPost(apiUrl, json, UTF8);
+    }
+
+    /**
+     * 发送 POST 请求，JSON形式
+     *
+     * @param apiUrl 请求地址
+     * @param json 参数或数据
+     * @param charset 编码格式
+     * @return 请求响应
+     */
+    public static String doPost(String apiUrl, String json, String charset) {
         if (StringUtil.isEmpty(json)) {
             return null;
         }
         HttpPost httpPost = new HttpPost(apiUrl);
         httpPost.setConfig(requestConfig);
         //解决中文乱码问题
-        StringEntity stringEntity = new StringEntity(json, UTF8);
-        stringEntity.setContentEncoding(UTF8);
+        StringEntity stringEntity = new StringEntity(json, charset);
+        stringEntity.setContentEncoding(charset);
         stringEntity.setContentType("application/json");
         httpPost.setEntity(stringEntity);
 

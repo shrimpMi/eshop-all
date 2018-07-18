@@ -1,5 +1,6 @@
 package com.polystone.tools.common;
 
+import com.alibaba.fastjson.JSON;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,13 +13,24 @@ import java.util.Map;
  */
 public class CustomHttpRequest {
 
+    /**
+     * 请求地址
+     */
     private String url;
+    /**
+     * 请求参数
+     */
     private Map<String, String> params;
+    /**
+     * 编码方式
+     */
+    private String charset;
 
 
     public CustomHttpRequest(String url, Map<String, String> params) {
         this.url = url;
         this.params = params;
+        this.charset = "UTF-8";
     }
 
     /**
@@ -29,6 +41,7 @@ public class CustomHttpRequest {
      */
     public static CustomHttpRequest build(String url) {
         CustomHttpRequest httpRequest = new CustomHttpRequest(url, new HashMap<>());
+        httpRequest.setCharset("UTF-8");
         return httpRequest;
     }
 
@@ -41,6 +54,16 @@ public class CustomHttpRequest {
      */
     public CustomHttpRequest addParam(String name, String val) {
         this.params.put(name, val);
+        return this;
+    }
+
+    /**
+     * 设置编码方式
+     *
+     * @return 返回值
+     */
+    public CustomHttpRequest setCharset(String charset) {
+        this.charset = charset;
         return this;
     }
 
@@ -64,6 +87,20 @@ public class CustomHttpRequest {
         CustomHttpResponse response = check();
         if (response.isSuccess()) {
             String res = HttpUtil.doPost(url, params);
+            response.setResponses(res);
+        }
+        return response;
+    }
+
+    /**
+     * 执行post请求
+     *
+     * @return 返回值
+     */
+    public CustomHttpResponse doPostJson() {
+        CustomHttpResponse response = check();
+        if (response.isSuccess()) {
+            String res = HttpUtil.doPost(url, JSON.toJSONString(params), charset);
             response.setResponses(res);
         }
         return response;
