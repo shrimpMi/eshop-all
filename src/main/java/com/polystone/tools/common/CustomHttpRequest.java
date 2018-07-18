@@ -161,11 +161,18 @@ public class CustomHttpRequest {
         return response;
     }
 
+    /**
+     * 检查请求地址
+     *
+     * @return 返回值
+     */
     private CustomHttpResponse check() {
         CustomHttpResponse response = new CustomHttpResponse();
         if (StringUtil.isEmptyTrim(url)) {
             response.setCode(1);
             response.setMsg("http url is empty");
+        } else {
+            response.setCode(0);
         }
         return response;
     }
