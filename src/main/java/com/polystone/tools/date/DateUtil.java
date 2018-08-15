@@ -832,4 +832,15 @@ public class DateUtil {
         int day = calendar.get(Calendar.DAY_OF_MONTH);
         return year * 10000 + month * 100 + day;
     }
+
+    //获取当前时间前后几天
+    public static String getBeforeDay(String pattern, Integer amount) {
+        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+        Date date = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DAY_OF_MONTH, amount);
+        date = calendar.getTime();
+        return sdf.format(date);
+    }
 }
