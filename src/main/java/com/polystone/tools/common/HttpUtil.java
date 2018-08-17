@@ -39,7 +39,7 @@ public class HttpUtil {
     private final static Logger Log = LoggerFactory.getLogger(HttpUtil.class);
     private static PoolingHttpClientConnectionManager connMgr;
     private static RequestConfig requestConfig;
-    private static final int MAX_TIMEOUT = 2 * 5000;
+    private static final int MAX_TIMEOUT = 30 * 1000;
     private static final int MAX_TOTAL = 50;
     private static final int SLEEP_TIME = 3000;
     private static final String UTF8 = "UTF-8";
