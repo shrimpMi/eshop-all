@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -16,13 +17,19 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.config.Registry;
+import org.apache.http.config.RegistryBuilder;
 import org.apache.http.conn.ConnectTimeoutException;
+import org.apache.http.conn.socket.ConnectionSocketFactory;
+import org.apache.http.conn.socket.PlainConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,18 +55,30 @@ public class HttpUtil {
 
 
     static {
-        // 设置连接池  
-        connMgr = new PoolingHttpClientConnectionManager();
-        // 设置连接池大小  
+        Registry<ConnectionSocketFactory> registry = null;
+        try {
+            registry = RegistryBuilder.<ConnectionSocketFactory>create()
+                .register("http", new PlainConnectionSocketFactory())
+                .register("https", new SSLConnectionSocketFactory(
+                    SSLContextBuilder.create().loadTrustMaterial((X509Certificate[] var1, String var2) -> {
+                        return true;
+                    }).build()))
+                .build();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        // 设置连接池
+        connMgr = new PoolingHttpClientConnectionManager(registry);
+        // 设置连接池大小
         connMgr.setMaxTotal(MAX_TOTAL);
         connMgr.setDefaultMaxPerRoute(connMgr.getMaxTotal());
 
         RequestConfig.Builder configBuilder = RequestConfig.custom();
-        // 设置连接超时  
+        // 设置连接超时
         configBuilder.setConnectTimeout(MAX_TIMEOUT);
-        // 设置读取超时  
+        // 设置读取超时
         configBuilder.setSocketTimeout(MAX_TIMEOUT);
-        // 设置从连接池获取连接实例的超时  
+        // 设置从连接池获取连接实例的超时
         configBuilder.setConnectionRequestTimeout(MAX_TIMEOUT);
         requestConfig = configBuilder.build();
     }
