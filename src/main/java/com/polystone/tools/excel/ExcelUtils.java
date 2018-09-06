@@ -20,6 +20,8 @@ public class ExcelUtils {
 	public static ExcelParser buildParser(InputStream in,Class<?> type,String[] colKeys,BaseRowPacker<?> parser) {
 		return new ExcelParser(in, type, colKeys, parser);
 	}
+
+
 	/**
 	 * 
 	 * @param in
@@ -32,7 +34,6 @@ public class ExcelUtils {
 	public static ExcelParser buildParser(InputStream in,Class<?> type,String[] colKeys,BaseRowPacker<?> parser,int offset) {
 		return new ExcelParser(in, type, colKeys, parser,offset);
 	}
-
 
 	public static void toExcelDowlond(HttpServletResponse resp, String fileName, String title, List<?> list, String[] heads, String[] keys, BaseColumnFormat format) {
 		ExcelCreator<?> creator = ExcelUtils.buildCreator(list);
