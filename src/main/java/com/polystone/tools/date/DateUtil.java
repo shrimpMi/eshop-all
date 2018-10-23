@@ -5,9 +5,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -843,4 +845,49 @@ public class DateUtil {
         date = calendar.getTime();
         return sdf.format(date);
     }
+
+    /**
+     * 单个数据按日期补零(格式：2017-01-01)
+     *
+     * @param startTime
+     *            开始时间
+     * @param endTime
+     *            结束时间
+     * @param concent
+     *            数据名称
+     * @return
+     */
+    public static List<Map<String, Object>> supplementByDay(String startTime, String endTime, String dateName,String concent) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date start = null;
+        Date end = null;
+        try {
+            start = simpleDateFormat.parse(startTime);
+            end = simpleDateFormat.parse(endTime);
+        } catch (ParseException e) {
+
+            return null;
+        }
+        Integer days = compare(start, end);
+        List<Map<String, Object>> reusltList = new ArrayList<>();
+        for (int i = 0; i < days + 1; i++) {
+            Map<String, Object> map1 = new HashMap<String, Object>();
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(start);
+            cal.add(Calendar.DAY_OF_MONTH, 1);
+            String time = simpleDateFormat.format(start);
+            map1.put(dateName, time);
+            map1.put(concent, 0);
+            reusltList.add(map1);
+            start = cal.getTime();
+        }
+        return reusltList;
+    }
+
+    public static int compare(Date one, Date two) {
+        Long num1 = one.getTime();
+        Long num2 = two.getTime();
+        return (int) ((num2 - num1) / (24 * 3600 * 1000));
+    }
+
 }
