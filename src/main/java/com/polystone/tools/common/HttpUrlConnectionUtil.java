@@ -34,8 +34,8 @@ public class HttpUrlConnectionUtil {
 
     private static final String HTTPS = "https://";
     private static final String HTTPS_UTF8 = "utf-8";
-    private static final int CONNECT_TIMEOUT = 50000;
-    private static final int READ_TIMEOUT = 50000;
+    private static final int CONNECT_TIMEOUT = 30000;
+    private static final int READ_TIMEOUT = 30000;
     /**
      * 忽视证书HostName
      */
@@ -221,10 +221,10 @@ public class HttpUrlConnectionUtil {
     public static void main(String[] args) {
         Map<String, String> map = new HashMap<>();
         map.put("ip", "63.223.108.42");
-        map.put("pwd", "1992525");
-        map.put("userName", "18051523775");
+//        map.put("pwd", "1992525");
+//        map.put("userName", "18051523775");
         try {
-            System.out.println(doPost("http://106.14.155.167:8093/polystone/shop/admin/login", map));
+            System.out.println(doGet("https://tcc.taobao.com/cc/json/mobile_tel_segment.htm?tel=15601508292", "gbk"));
         } catch (Exception e) {
             e.printStackTrace();
         }
