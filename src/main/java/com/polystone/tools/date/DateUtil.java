@@ -890,4 +890,11 @@ public class DateUtil {
         return (int) ((num2 - num1) / (24 * 3600 * 1000));
     }
 
+    public static Date getDateAfterSecond(Date date, int seconds) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.SECOND, seconds);
+        return calendar.getTime();
+    }
+
 }
