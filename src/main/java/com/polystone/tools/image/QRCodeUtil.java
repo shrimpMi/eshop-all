@@ -306,8 +306,7 @@ public class QRCodeUtil {
 	 * @param content 二维码内容
 	 */
 	public static void createQROverImage(String bgPath,String newImagePath,String content
-			,int x,int y,int size) {
-		InputStream is = null;
+			,int x,int y,int size,Color color) {
 		OutputStream os = null;
 		try {
 			// 1、源图片
@@ -334,17 +333,13 @@ public class QRCodeUtil {
 			int offset = 0 ; //白边缩进
 
 			// 使用比特矩阵画并保存图像
-			g.setColor(Color.BLACK);
+			g.setColor(color);
 			for (int i = 0; i < matrixWidth; i++){
 				for (int j = 0; j < matrixWidth; j++){
 					if(i < offset || j < offset || i > matrixWidth-offset || j > matrixWidth-offset){
 						continue;
 					}
 					if (byteMatrix.get(i, j)){
-						g.setColor(Color.BLACK);
-						g.fillRect(x+i, y+j, 1, 1);
-					}else{
-						g.setColor(Color.WHITE);
 						g.fillRect(x+i, y+j, 1, 1);
 					}
 				}
@@ -352,18 +347,12 @@ public class QRCodeUtil {
 
 			// 9、释放资源
 			g.dispose();
-			// 10、生成图片
+
 			os = new FileOutputStream(newImagePath);
 			ImageIO.write(buffImg, "JPG", os);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			try {
-				if (null != is)
-					is.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
 			try {
 				if (null != os)
 					os.close();
@@ -373,6 +362,11 @@ public class QRCodeUtil {
 		}
 	}
 
+	public static void main(String[] args) {
+		QRCodeUtil.createQROverImage("D:/1.jpg","D:/2.jpg"
+				,"https://api.51polystone.com/polystone/public/weixin/h5/authorize?encrypt=0&phone=1529838333"
+				,294,1080,162,Color.red);
+	}
 
 
 }

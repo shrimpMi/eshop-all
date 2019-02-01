@@ -516,7 +516,7 @@ public class SecurityUtil {
     /**
      * 将byte转为16进制
      */
-    private String byte2Hex(byte[] bytes) {
+    public String byte2Hex(byte[] bytes) {
         StringBuffer stringBuffer = new StringBuffer();
         String temp = null;
         for (int i = 0; i < bytes.length; i++) {
@@ -528,6 +528,32 @@ public class SecurityUtil {
             stringBuffer.append(temp);
         }
         return stringBuffer.toString();
+    }
+
+    public static String hexStringToBytes(String hexString,String chartset) {
+        if (hexString == null || hexString.equals("")) {
+            return null;
+        }
+        hexString = hexString.toUpperCase();
+        int length = hexString.length() / 2;
+        char[] hexChars = hexString.toCharArray();
+        byte[] d = new byte[length];
+        for (int i = 0; i < length; i++) {
+            int pos = i * 2;
+            d[i] = (byte) (charToByte(hexChars[pos]) << 4 | charToByte(hexChars[pos + 1]));
+
+        }
+        try {
+            return new String(d,chartset);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    private static byte charToByte(char c) {
+        return (byte) "0123456789ABCDEF".indexOf(c);
     }
 
 }
