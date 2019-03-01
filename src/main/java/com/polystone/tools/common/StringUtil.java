@@ -203,6 +203,12 @@ public class StringUtil {
         String str = new String(Base64.decodeBase64(bytes));
         return str;
     }
+    /**
+     * base64位
+     */
+    public static String decodeBase64(String str) {
+        return decodeBase64(str.getBytes(Charset.forName("utf-8")));
+    }
 
     /**
      * 二进制数据编码为BASE64字符串
