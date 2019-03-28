@@ -10,6 +10,7 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.StringUtils;
 import sun.misc.BASE64Decoder;
 
 /**
@@ -203,6 +204,7 @@ public class StringUtil {
         String str = new String(Base64.decodeBase64(bytes));
         return str;
     }
+
     /**
      * base64位
      */
@@ -395,34 +397,49 @@ public class StringUtil {
 
 
     public static String filterEmoji(String source) {
-        if(isNotTrimEmpty(source)){
-            Pattern emoji = Pattern.compile ("[\ud83c\udc00-\ud83c\udfff]|[\ud83d\udc00-\ud83d\udfff]|[\u2600-\u27ff]",Pattern.UNICODE_CASE | Pattern . CASE_INSENSITIVE ) ;
+        if (isNotTrimEmpty(source)) {
+            Pattern emoji = Pattern.compile("[\ud83c\udc00-\ud83c\udfff]|[\ud83d\udc00-\ud83d\udfff]|[\u2600-\u27ff]",
+                Pattern.UNICODE_CASE | Pattern.CASE_INSENSITIVE);
             Matcher emojiMatcher = emoji.matcher(source);
-            if ( emojiMatcher.find())
-            {
+            if (emojiMatcher.find()) {
                 source = emojiMatcher.replaceAll("*");
-                return source ;
+                return source;
             }
             return source;
         }
         return source;
     }
 
-    public static boolean isChinaPhoneLegal(String phone){
+    public static boolean isChinaPhoneLegal(String phone) {
         String REGEX_MOBILE = "^((13[0-9])|(14[5,7,9])|(15([0-3]|[5-9]))|(166)|(17[0,1,3,5,6,7,8])|(18[0-9])|(19[8|9]))\\d{8}$";
         return Pattern.matches(REGEX_MOBILE, phone);
     }
 
-    public static boolean isHKPhoneLegal(String phone){
+    public static boolean isHKPhoneLegal(String phone) {
         String REGEX_MOBILE = "^([5,6,8,9])\\d{7}$";
         return Pattern.matches(REGEX_MOBILE, phone);
     }
 
-    public static boolean isEmailLegal(String email){
+    public static boolean isEmailLegal(String email) {
         String REGEX_EMAIL = "^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
         return Pattern.matches(REGEX_EMAIL, email);
     }
 
+    /**
+     * [银行卡号] 前六位，后四位，其他用星号隐藏每位1个星号<例子:6222600**********1234>
+     *
+     * @param cardNum 参数
+     * @return 返回值
+     */
+    public static String bankCard(String cardNum) {
+        if (isEmpty(cardNum)) {
+            return "";
+        }
+        return StringUtils
+            .left(cardNum, 6).concat(StringUtils
+                .removeStart(StringUtils.leftPad(StringUtils.right(cardNum, 4), StringUtils.length(cardNum), "*"),
+                    "******"));
+    }
 
 
 }
