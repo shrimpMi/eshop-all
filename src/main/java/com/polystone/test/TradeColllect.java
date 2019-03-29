@@ -18,32 +18,33 @@ import java.util.*;
  */
 public class TradeColllect {
 
-    public static void main(String[] args) throws Exception {
-        System.out.println("开始了");
-        int i = 0 ;
-        String path = "D:\\new.txt";
-        BufferedReader reader = new BufferedReader(new FileReader(new File(path)));
-        while(reader.ready()) {
-            String jsonData = reader.readLine();
-            if(jsonData==null || jsonData.trim().length()==0)continue;
-
-            jsonData = SecurityUtil.getInstance().encryptAES(jsonData,"ganjuerenshengdaodalegaochao!");
-            Map<String,String> params = new HashMap<>();
-            params.put("jsonData", jsonData);
-            params.put("sign", MD5Util.MD5Encode(jsonData+"haohaiyo!","UTF-8"));
-            System.out.println(params);
-            String ret = HttpUtil.doPost("http://remittance.51polystone.com/collect/public/sdb/test", params);
-            System.out.println(ret);
-            i++;
-        }
-        System.out.println("结束了,"+i);
-    }
+//    public static void main(String[] args) throws Exception {
+//        System.out.println("开始了");
+//        int i = 0 ;
+//        String path = "D:\\new.txt";
+//        BufferedReader reader = new BufferedReader(new FileReader(new File(path)));
+//        while(reader.ready()) {
+//            String jsonData = reader.readLine();
+//            if(jsonData==null || jsonData.trim().length()==0)continue;
+//
+//            jsonData = SecurityUtil.getInstance().encryptAES(jsonData,"ganjuerenshengdaodalegaochao!");
+//            Map<String,String> params = new HashMap<>();
+//            params.put("jsonData", jsonData);
+//            params.put("sign", MD5Util.MD5Encode(jsonData+"haohaiyo!","UTF-8"));
+//            System.out.println(params);
+//            String ret = HttpUtil.doPost("http://remittance.51polystone.com/collect/public/sdb/test", params);
+//            System.out.println(ret);
+//            i++;
+//        }
+//        System.out.println("结束了,"+i);
+//    }
 
 
 //    public static void main(String[] args) throws Exception{
 //        System.out.println("开始了");
-//        String[] keys = new String[]{"certificateSonMail","transSeq","hpMerCode","productCode","transDate"
-//                ,"transTime","transType","transAmt","transFee","transStatus"};
+//        String[] keys = new String[]{"certificateSonMail","transSeq","hpMerCode","hpMerLv","inviteType"
+//                ,"transType","transTime","transAmt","transStatus"};
+//
 //        int num = 0 ;
 //        String path = "D:\\noncardTrade.txt";
 //        BufferedReader reader = new BufferedReader(new FileReader(new File(path)));
@@ -65,11 +66,11 @@ public class TradeColllect {
 //            info.put("method", "TradeInfo");
 //
 //            String jsonData = JSON.toJSONString(info);
-//            jsonData = SecurityUtil.getInstance().encryptAES(jsonData,"ganju1erenshengdaodalegaochao!");
+//            jsonData = SecurityUtil.getInstance().encryptAES(jsonData,"ganjuerenshengdaodalegaochao!");
 //
 //            Map<String,String> params = new HashMap<>();
 //            params.put("jsonData", jsonData);
-//            params.put("sign", MD5Util.MD5Encode(jsonData+"haohai1yo!","UTF-8"));
+//            params.put("sign", MD5Util.MD5Encode(jsonData+"haohaiyo!","UTF-8"));
 //            System.out.println(params);
 //            String ret = HttpUtil.doPost("http://remittance.51polystone.com/collect/public/xwt/test", params);
 //            System.out.println(ret);
@@ -77,6 +78,8 @@ public class TradeColllect {
 //        }
 //        System.out.println("结束了,"+num);
 //    }
+
+
 
 //    public static void main(String[] args) {
 //        try {
@@ -134,4 +137,17 @@ public class TradeColllect {
         }
     }
 
+
+    public static void main(String[] args) {
+        String line = "1243628837@qq.com,XWT@XW181224094930892,,红狼网络,审核通过,20181224095727\t,XWT\t,\t,";
+        line = line.trim().replace(" ","");
+        line = line.replace("\t","");
+        //5.组装数据包
+        String[] vals = line.split(",");
+        for(String val : vals){
+            System.out.println(val);
+
+        }
+        System.out.println(vals.length);
+    }
 }
