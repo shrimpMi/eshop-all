@@ -132,6 +132,15 @@ public class MathUtil {
     }
 
     /**
+     * 获取两个double的乘积
+     *
+     * @return [说明]
+     */
+    public static BigDecimal multiply(BigDecimal num1, BigDecimal num2) {
+        return num1.multiply(num2).setScale(2, BigDecimal.ROUND_HALF_UP);
+    }
+
+    /**
      * 获取double和int相除的结果
      *
      * @param newScale 小数精度
