@@ -745,6 +745,8 @@ public class DateUtil {
             case Calendar.DAY_OF_YEAR:
                 cal.add(Calendar.DAY_OF_YEAR, distance);
                 break;
+            case  Calendar.HOUR_OF_DAY:
+                cal.add(Calendar.HOUR_OF_DAY, distance);
             default:
                 break;
 
