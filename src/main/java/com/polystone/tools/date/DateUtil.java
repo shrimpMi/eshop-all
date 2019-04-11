@@ -729,28 +729,7 @@ public class DateUtil {
     public static Date getAfterSomeDistanceDate(Date day, int distance, int unit) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(day);
-        switch (unit) {
-            case Calendar.SECOND:
-                cal.add(Calendar.SECOND, distance);
-                break;
-            case Calendar.MINUTE:
-                cal.add(Calendar.MINUTE, distance);
-                break;
-            case Calendar.DAY_OF_MONTH:
-                cal.add(Calendar.DAY_OF_MONTH, distance);
-                break;
-            case Calendar.MONTH:
-                cal.add(Calendar.MONTH, distance);
-                break;
-            case Calendar.DAY_OF_YEAR:
-                cal.add(Calendar.DAY_OF_YEAR, distance);
-                break;
-            case  Calendar.HOUR_OF_DAY:
-                cal.add(Calendar.HOUR_OF_DAY, distance);
-            default:
-                break;
-
-        }
+        cal.add(unit, distance);
         return cal.getTime();
     }
 
