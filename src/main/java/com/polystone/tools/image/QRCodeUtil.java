@@ -363,9 +363,9 @@ public class QRCodeUtil {
 	}
 
 	public static void main(String[] args) {
-		QRCodeUtil.createQROverImage("D:/1.jpg","D:/2.jpg"
+		QRCodeUtil.createQROverImage("D:/0.jpg","D:/3.jpg"
 				,"https://api.51polystone.com/polystone/public/weixin/h5/authorize?encrypt=0&phone=1529838333"
-				,294,1080,162,Color.red);
+				,282,1092,184,Color.BLACK);
 	}
 
 
