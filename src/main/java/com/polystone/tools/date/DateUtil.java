@@ -723,32 +723,13 @@ public class DateUtil {
      * 得到一段时间之后(之前)的时间
      *
      * @param distance 时间跨度
-     * @param Unit 时间单位 如:Calendar.SECOND
+     * @param unit 时间单位 如:Calendar.SECOND
      * @return [参数说明]
      */
-    public static Date getAfterSomeDistanceDate(Date day, int distance, int Unit) {
+    public static Date getAfterSomeDistanceDate(Date day, int distance, int unit) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(day);
-        switch (Unit) {
-            case Calendar.SECOND:
-                cal.add(Calendar.SECOND, distance);
-                break;
-            case Calendar.MINUTE:
-                cal.add(Calendar.MINUTE, distance);
-                break;
-            case Calendar.DAY_OF_MONTH:
-                cal.add(Calendar.DAY_OF_MONTH, distance);
-                break;
-            case Calendar.MONTH:
-                cal.add(Calendar.MONTH, distance);
-                break;
-            case Calendar.DAY_OF_YEAR:
-                cal.add(Calendar.DAY_OF_YEAR, distance);
-                break;
-            default:
-                break;
-
-        }
+        cal.add(unit, distance);
         return cal.getTime();
     }
 
