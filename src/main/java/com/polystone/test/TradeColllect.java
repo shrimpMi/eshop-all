@@ -138,16 +138,16 @@ public class TradeColllect {
     }
 
 
-    public static void main(String[] args) {
-        String line = "1243628837@qq.com,XWT@XW181224094930892,,红狼网络,审核通过,20181224095727\t,XWT\t,\t,";
-        line = line.trim().replace(" ","");
-        line = line.replace("\t","");
-        //5.组装数据包
-        String[] vals = line.split(",");
-        for(String val : vals){
-            System.out.println(val);
-
-        }
-        System.out.println(vals.length);
-    }
+//    public static void main(String[] args) {
+//        String line = "1243628837@qq.com,XWT@XW181224094930892,,红狼网络,审核通过,20181224095727\t,XWT\t,\t,";
+//        line = line.trim().replace(" ","");
+//        line = line.replace("\t","");
+//        //5.组装数据包
+//        String[] vals = line.split(",");
+//        for(String val : vals){
+//            System.out.println(val);
+//
+//        }
+//        System.out.println(vals.length);
+//    }
 }

@@ -261,12 +261,22 @@ public class SecurityUtil {
      * @param privateKey 私钥(BASE64编码)
      */
     public byte[] sign(byte[] data, String privateKey) {
+        return sign(data,privateKey,SIGNATURE_ALGORITHM);
+    }
+
+    /**
+     * 用私钥对信息生成数字签名
+     *
+     * @param data 已加密数据
+     * @param privateKey 私钥(BASE64编码)
+     */
+    public byte[] sign(byte[] data, String privateKey,String signMethod) {
         try {
             byte[] keyBytes = Base64.decodeBase64(privateKey);
             PKCS8EncodedKeySpec pkcs8KeySpec = new PKCS8EncodedKeySpec(keyBytes);
             KeyFactory keyFactory = KeyFactory.getInstance(KEY_ALGORITHM);
             PrivateKey privateK = keyFactory.generatePrivate(pkcs8KeySpec);
-            Signature signature = Signature.getInstance(SIGNATURE_ALGORITHM);
+            Signature signature = Signature.getInstance(signMethod);
             signature.initSign(privateK);
             signature.update(data);
             return signature.sign();
