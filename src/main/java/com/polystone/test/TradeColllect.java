@@ -7,6 +7,7 @@ import com.polystone.tools.common.StringUtil;
 import com.polystone.tools.security.SecurityUtil;
 
 import java.io.*;
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -18,6 +19,21 @@ import java.util.*;
  */
 public class TradeColllect {
 
+    public static void main(String[] args) {
+        String salt = "BnExnJd8UFyGd0bSEyNklPI3aaOQyttf";
+        //termSn
+        String jsonData = "{\"orderNo\":\"201906191523115347\",\"tradeTime\":\"20190617100453\",\"tradeAmt\":\"100\",\"stlmDate\":\"20190510\",\"tradeType\":\"0\",\"trademode\":\"2\",\"tradeStatus\":\"1\",\"rspCode\":\"应答码\",\"cardType\":\"1\",\"mchtCd\":\"ACT190414100007\",\"termSn\":\"11910110549504305\",\"terminalNo\":\"1100100101\",\"tradeFirstFlag\":\"2\",\"method\":\"TradeInformation\",\"feeAmt\":\"3\",\"isVipTrade\":\"2\",\"tsFlag\":\"2\",\"d0FeeAmt\":\"0.00\",\"vipType\":\"03\",\"regDate\":\"20190510\"}";
+        String checkValue = SecurityUtil.getInstance().getSHA256Str(jsonData+salt);
+
+        Map<String,String> params = new HashMap<>();
+        params.put("jsonData", jsonData);
+        params.put("checkValue", checkValue);
+        System.out.println(params);
+        String ret = HttpUtil.doPost("http://remittance.51polystone.com/collect/public/auto/allinpay/trade", params);
+        System.out.println(ret);
+    }
+
+
 //    public static void main(String[] args) throws Exception {
 //        System.out.println("开始了");
 //        int i = 0 ;
@@ -27,12 +43,12 @@ public class TradeColllect {
 //            String jsonData = reader.readLine();
 //            if(jsonData==null || jsonData.trim().length()==0)continue;
 //
-//            jsonData = SecurityUtil.getInstance().encryptAES(jsonData,"ganjuerenshengdaodalegaochao!");
+//            String checkValue = SecurityUtil.getInstance().getSHA256Str(jsonData+"YUHTRPSUCSHJNN78");
 //            Map<String,String> params = new HashMap<>();
 //            params.put("jsonData", jsonData);
-//            params.put("sign", MD5Util.MD5Encode(jsonData+"haohaiyo!","UTF-8"));
+//            params.put("checkValue",checkValue);
 //            System.out.println(params);
-//            String ret = HttpUtil.doPost("http://remittance.51polystone.com/collect/public/sdb/test", params);
+//            String ret = HttpUtil.doPost("http://remittance.51polystone.com/collect/public/auto/freedomsdb/trade", params);
 //            System.out.println(ret);
 //            i++;
 //        }
