@@ -17,7 +17,7 @@ public class ExcelUtils {
 	public static ExcelParser buildParser(InputStream in) {
 		return new ExcelParser(in);
 	}
-	public static ExcelParser buildParser(InputStream in,Class<?> type,String[] colKeys,BaseRowPacker<?> parser) {
+	public static <T> ExcelParser buildParser(InputStream in,Class<T> type,String[] colKeys,BaseRowPacker<T> parser) {
 		return new ExcelParser(in, type, colKeys, parser);
 	}
 
@@ -31,12 +31,12 @@ public class ExcelUtils {
 	 * @param offset 忽略多少行
 	 * @return
 	 */
-	public static ExcelParser buildParser(InputStream in,Class<?> type,String[] colKeys,BaseRowPacker<?> parser,int offset) {
+	public static <T> ExcelParser buildParser(InputStream in,Class<T> type,String[] colKeys,BaseRowPacker<T> parser,int offset) {
 		return new ExcelParser(in, type, colKeys, parser,offset);
 	}
 
-	public static void toExcelDowlond(HttpServletResponse resp, String fileName, String title, List<?> list, String[] heads, String[] keys, BaseColumnFormat format) {
-		ExcelCreator<?> creator = ExcelUtils.buildCreator(list);
+	public static <T> void toExcelDowlond(HttpServletResponse resp, String fileName, String title, List<T> list, String[] heads, String[] keys, BaseColumnFormat<T> format) {
+		ExcelCreator<T> creator = ExcelUtils.buildCreator(list);
 		creator.setFileName(fileName);
 		creator.setTitle(title);
 		creator.setColTitles(heads);
@@ -45,7 +45,7 @@ public class ExcelUtils {
 		write(resp,creator);
 	}
 
-	public static void write(HttpServletResponse resp,ExcelCreator<?> creator) {
+	public static void write(HttpServletResponse resp,ExcelCreator creator) {
 //		没搞清楚,反正从上下文取的response是个**,文件下载成功后会内部跳转一把
 //		HttpServletResponse resp = getResp();
 		setResponseHeader(resp, creator.getFileName());

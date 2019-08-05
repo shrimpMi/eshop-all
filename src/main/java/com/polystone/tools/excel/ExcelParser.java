@@ -11,11 +11,11 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
 
 
-public class ExcelParser{
-	private List<Object> data;
-	private Class<?> type;
+public class ExcelParser<T>{
+	private List<T> data;
+	private Class<T> type;
 	private String[] colKeys;
-	private BaseRowPacker<?> packer;
+	private BaseRowPacker<T> packer;
 	
 	private Workbook book;
 	private InputStream in;
@@ -36,14 +36,14 @@ public class ExcelParser{
 		return null;
 	}
 	
-	public List<?> parser() {
+	public List<T> parser() {
 		//获取Excel文档中的第一个表单
 		Sheet sht0 = book.getSheetAt(0);
 		//对Sheet中的每一行进行迭代
-		data = new ArrayList<Object>();
+		data = new ArrayList();
 		//
 		if(packer==null) {
-			packer = initMapPacker();
+			throw new RuntimeException("数据装载未实现");
 		}
 		int rowNum = 0;
 		for (Row r : sht0) {
@@ -51,7 +51,7 @@ public class ExcelParser{
 			if(rowNum > offset) {
 				try {
 					//创建实体类
-					Object obj = packer.getInstance();
+					T obj = packer.getInstance();
 					boolean success = true;
 					//取出当前行第i个单元格数据，并封装在info实体stuName属性上  
 					for(int i = 0 ; i < colKeys.length ; i++) {
@@ -96,22 +96,22 @@ public class ExcelParser{
 		}
 		return o;
 	}
+//
+//	public BaseRowPacker<Map<String,Object>> initMapPacker() {
+//		return new BaseRowPacker<Map<String,Object>>() {
+//			@Override
+//			public Map<String, Object> getInstance() {
+//				return new HashMap<String,Object>();
+//			}
+//			@Override
+//			public boolean packing(Object t, String key, String text) {
+//				((Map<String,Object>)t).put(key, text);
+//				return true;
+//			}
+//		};
+//	}
 	
-	public BaseRowPacker<Map<String,Object>> initMapPacker() {
-		return new BaseRowPacker<Map<String,Object>>() {
-			@Override
-			public Map<String, Object> getInstance() {
-				return new HashMap<String,Object>();
-			}
-			@Override
-			public boolean packing(Object t, String key, String text) {
-				((Map<String,Object>)t).put(key, text);
-				return true;
-			}
-		};
-	}
-	
-	public ExcelParser(InputStream in,Class<?> type,String[] colKeys,BaseRowPacker<?> packer) {
+	public ExcelParser(InputStream in,Class<T> type,String[] colKeys,BaseRowPacker<T> packer) {
 		this.in = in;
 		this.type = type;
 		this.colKeys = colKeys;
@@ -127,7 +127,7 @@ public class ExcelParser{
 		}
 		this.offset=0;
 	}
-	public ExcelParser(InputStream in,Class<?> type,String[] colKeys,BaseRowPacker<?> packer,int offset) {
+	public ExcelParser(InputStream in,Class<T> type,String[] colKeys,BaseRowPacker<T> packer,int offset) {
 		this.in = in;
 		this.type = type;
 		this.colKeys = colKeys;
@@ -162,10 +162,10 @@ public class ExcelParser{
 	public void setColKeys(String[] colKeys) {
 		this.colKeys = colKeys;
 	}
-	public BaseRowPacker<?> getPacker() {
+	public BaseRowPacker<T> getPacker() {
 		return packer;
 	}
-	public void setPacker(BaseRowPacker<?> packer) {
+	public void setPacker(BaseRowPacker<T> packer) {
 		this.packer = packer;
 	}
 	public InputStream getIn() {
@@ -175,19 +175,19 @@ public class ExcelParser{
 		this.in = in;
 	}
 
-	public List<Object> getData() {
+	public List<T> getData() {
 		return data;
 	}
 
-	public void setData(List<Object> data) {
+	public void setData(List<T> data) {
 		this.data = data;
 	}
 
-	public Class<?> getType() {
+	public Class<T> getType() {
 		return type;
 	}
 
-	public void setType(Class<?> type) {
+	public void setType(Class<T> type) {
 		this.type = type;
 	}
 }
