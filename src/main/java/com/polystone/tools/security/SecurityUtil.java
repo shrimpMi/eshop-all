@@ -311,6 +311,29 @@ public class SecurityUtil {
     }
 
     /**
+     * 校验数字签名
+     *
+     * @param data 已加密数据
+     * @param publicKey 公钥(BASE64编码)
+     * @param sign 数字签名
+     */
+    public boolean verify(byte[] data, String publicKey, String sign ,String codeMethod) {
+        try {
+            byte[] keyBytes = Base64.decodeBase64(publicKey);
+            X509EncodedKeySpec keySpec = new X509EncodedKeySpec(keyBytes);
+            KeyFactory keyFactory = KeyFactory.getInstance(KEY_ALGORITHM);
+            PublicKey publicK = keyFactory.generatePublic(keySpec);
+            Signature signature = Signature.getInstance(codeMethod);
+            signature.initVerify(publicK);
+            signature.update(data);
+            return signature.verify(Base64.decodeBase64(sign));
+        } catch (Exception e) {
+            LOG.error("verify is error", e);
+        }
+        return false;
+    }
+
+    /**
      * 私钥解密
      *
      * @param encryptedData 已加密数据
