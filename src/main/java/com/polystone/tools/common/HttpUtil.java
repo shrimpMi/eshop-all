@@ -1,5 +1,6 @@
 package com.polystone.tools.common;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -23,6 +24,7 @@ import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -356,6 +358,28 @@ public class HttpUtil {
             httpPost.setEntity(urlEntity);
             return execute(httpPost, buildHttpClient());
         } catch (UnsupportedEncodingException e) {
+            Log.error("http request post is error ", e);
+        }
+        return null;
+    }
+
+    /**
+     * 发送 POST 请求（HTTP），JSON形式
+     * @param params json对象
+     */
+    public static String doPostFiles(String apiUrl, Map<String, File> params) {
+        if (isEmpty(params)) {
+            return null;
+        }
+        try {
+            HttpPost httpPost = new HttpPost(apiUrl);
+            httpPost.setConfig(requestConfig);
+            for(String key :params.keySet()){
+                FileEntity file = new FileEntity(params.get(key));
+                httpPost.setEntity(file);
+            }
+            return execute(httpPost, buildHttpClient());
+        } catch (Exception e) {
             Log.error("http request post is error ", e);
         }
         return null;
