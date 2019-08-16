@@ -1,0 +1,1 @@
+﻿{"orderNo":"201907241548501606","tradeAmt":"100","feeAmt":"0.00","cardType":"C","tradeTime":"201920617090452","bindTime":"","activationTime":"20190723150054","method":"MemberActivation","agentLevel":"3","tradeType":"1001","tradeStatus":"S","isVipTrade":"2","devsId":"11913270676733746","from":"sdb"}

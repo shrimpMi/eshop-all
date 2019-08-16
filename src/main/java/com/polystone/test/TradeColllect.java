@@ -1,13 +1,10 @@
 package com.polystone.test;
 
-import com.alibaba.fastjson.JSON;
 import com.polystone.tools.common.HttpUtil;
-import com.polystone.tools.common.MD5Util;
 import com.polystone.tools.common.StringUtil;
 import com.polystone.tools.security.SecurityUtil;
 
 import java.io.*;
-import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -19,25 +16,26 @@ import java.util.*;
  */
 public class TradeColllect {
 
-//    public static void main(String[] args) {
-//        String salt = "BnExnJd8UFyGd0bSEyNklPI3aaOQyttf";
-//        //termSn
-//        String jsonData = "{\"orderNo\":\"201907101523166337\",\"tradeTime\":\"20190710100453\",\"tradeAmt\":\"100\",\"stlmDate\":\"20190510\",\"tradeType\":\"0\",\"trademode\":\"0\",\"tradeStatus\":\"1\",\"rspCode\":\"应答码\",\"cardType\":\"1\",\"mchtCd\":\"ACT190414100007\",\"termSn\":\"11910110549504305\",\"terminalNo\":\"11910110549504305\",\"tradeFirstFlag\":\"2\",\"method\":\"TradeInformation\",\"feeAmt\":\"3\",\"isVipTrade\":\"2\",\"tsFlag\":\"2\",\"d0FeeAmt\":\"0.00\",\"vipType\":\"01\",\"regDate\":\"20190510\"}";
-//        String checkValue = SecurityUtil.getInstance().getSHA256Str(jsonData+salt);
-//
-//        Map<String,String> params = new HashMap<>();
-//        params.put("jsonData", jsonData);
-//        params.put("checkValue", checkValue);
-//        System.out.println(params);
-//        String ret = HttpUtil.doPost("http://remittance.51polystone.com/collect/public/auto/allinpay/trade", params);
-//        System.out.println(ret);
-//    }
+    public static void main1(String[] args) {
+        String salt = "BnExnJd8UFyGd0bSEyNklPI3aaOQyttf";
+        //termSn
+        String jsonData = "{\"tradeAmt\":\"26800.00\",\"terminalNo\":\"10349659\",\"tsFlag\":\"1\",\"orderNo\":\"0802121712531885\",\"method\":\"TradeInformation\",\"mchtCd\":\"999384510028055\",\"tradeFirstFlag\":\"0\",\"cardType\":\"2\",\"regDate\":\"20190802\",\"vipType\":\"00\",\"extSeqId\":\"00000001\",\"trademode\":\"0\",\"feeAmt\":\"142.36\",\"tradeTime\":\"20190802121712\",\"termSn\":\"579300000406132\",\"rspCode\":\"00\",\"stlmDate\":\"20190802\",\"isVipTrade\":\"2\",\"tradeStatus\":\"1\",\"from\":\"allinpay\",\"d0FeeAmt\":\"3.00\",\"tradeType\":\"1011\"}";
 
+        String checkValue = SecurityUtil.getInstance().getSHA256Str(jsonData+salt);
 
-    public static void main(String[] args) throws Exception {
+        Map<String,String> params = new HashMap<>();
+        params.put("jsonData", jsonData);
+        params.put("checkValue", checkValue);
+        System.out.println(params);
+        String ret = HttpUtil.doPost("http://remittance.51polystone.com/collect/public/auto/allinpay/trade", params);
+        System.out.println(ret);
+    }
+
+    public static void main0(String[] args) throws Exception {
+        // OrderNo terminalNo(devsId) method(TradeInformation/MemberActivation)
         System.out.println("开始了");
         int i = 0 ;
-        String path = "D:\\new.txt";
+        String path = "/Users/xiaoming/source/jushi/tools/src/main/java/com/polystone/test/new.txt";
         BufferedReader reader = new BufferedReader(new FileReader(new File(path)));
         while(reader.ready()) {
             String jsonData = reader.readLine();
