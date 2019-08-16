@@ -1,7 +1,10 @@
 package com.polystone.tools.validate;
 
 import com.polystone.tools.common.StringUtil;
+import org.apache.commons.collections4.MapUtils;
+
 import java.math.BigDecimal;
+import java.util.Map;
 
 /**
  * 类型转换工具
@@ -17,6 +20,22 @@ public class ParamUtil {
     public static boolean parseBool(Object param) {
         return parseBool(param, false);
     }
+
+
+    public static Object mapDefVal(Map<String,Object> map, String key, Object def){
+        if(map==null)return def;
+        Object obj = map.get(key);
+        if(obj==null)return def;
+        return obj;
+    }
+
+    public static String mapStrVal(Map<String,Object> map, String key,String def ){
+        if(map==null)return def;
+        Object obj = map.get(key);
+        if(obj==null)return def;
+        return obj.toString();
+    }
+
 
     /**
      * 转换布尔值
