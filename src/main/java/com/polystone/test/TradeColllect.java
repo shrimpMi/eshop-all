@@ -1,6 +1,8 @@
 package com.polystone.test;
 
+import com.alibaba.fastjson.JSON;
 import com.polystone.tools.common.HttpUtil;
+import com.polystone.tools.common.MD5Util;
 import com.polystone.tools.common.StringUtil;
 import com.polystone.tools.security.SecurityUtil;
 
@@ -16,10 +18,22 @@ import java.util.*;
  */
 public class TradeColllect {
 
+    public static void main0(String[] args) {
+        String jsonData = "{\"logNo\":\"No001210\",\"txnCd\":\"VIPPAY\",\"txnTm\":\"20190809142400\",\"txnAmt\":\"1000\",\"trmNo\":\"410000032543003281610\",\"snNo\":\"410000032543003281610\",\"stlTyp\":\"T0\",\"batNo\":\"1\",\"ttxnSts\":\"S\",\"mercFeeAmt\":\"1.5\",\"acDt\":\"20190717\",\"crdNo\":\"5142145878787412\",\"crdFlg\":\"借记卡\",\"cseqNo\":\"1\",\"mercId\":\"1\",\"mercNm\":\"1\",\"feeTyp\":\"1\"}";
+        jsonData = SecurityUtil.getInstance().encryptAES(jsonData,"ganjuerenshengdaodalegaochao!");
+        Map<String,String> params = new HashMap<>();
+        params.put("jsonData", jsonData);
+        params.put("sign", MD5Util.MD5Encode(jsonData+"haohaiyo!","UTF-8"));
+        System.out.println(params);
+        String ret = HttpUtil.doPost("http://remittance.51polystone.com/collect/public/dpos/test", params);
+        System.out.println(ret);
+    }
+
+
     public static void main1(String[] args) {
         String salt = "BnExnJd8UFyGd0bSEyNklPI3aaOQyttf";
         //termSn
-        String jsonData = "{\"tradeAmt\":\"26800.00\",\"terminalNo\":\"10349659\",\"tsFlag\":\"1\",\"orderNo\":\"0802121712531885\",\"method\":\"TradeInformation\",\"mchtCd\":\"999384510028055\",\"tradeFirstFlag\":\"0\",\"cardType\":\"2\",\"regDate\":\"20190802\",\"vipType\":\"00\",\"extSeqId\":\"00000001\",\"trademode\":\"0\",\"feeAmt\":\"142.36\",\"tradeTime\":\"20190802121712\",\"termSn\":\"579300000406132\",\"rspCode\":\"00\",\"stlmDate\":\"20190802\",\"isVipTrade\":\"2\",\"tradeStatus\":\"1\",\"from\":\"allinpay\",\"d0FeeAmt\":\"3.00\",\"tradeType\":\"1011\"}";
+        String jsonData = "{\"tradeAmt\":\"268.00\",\"terminalNo\":\"410000032543003281610\",\"tsFlag\":\"1\",\"orderNo\":\"0802121712531885\",\"method\":\"TerminalActivation\",\"mchtCd\":\"999384510028055\",\"tradeFirstFlag\":\"0\",\"cardType\":\"2\",\"regDate\":\"20190802\",\"vipType\":\"00\",\"extSeqId\":\"00000001\",\"trademode\":\"0\",\"feeAmt\":\"142.36\",\"tradeTime\":\"20190802121712\",\"termSn\":\"410000032543003281610\",\"rspCode\":\"00\",\"stlmDate\":\"20190802\",\"isVipTrade\":\"2\",\"tradeStatus\":\"1\",\"from\":\"allinpay\",\"d0FeeAmt\":\"3.00\",\"tradeType\":\"1011\"}";
 
         String checkValue = SecurityUtil.getInstance().getSHA256Str(jsonData+salt);
 
@@ -31,11 +45,12 @@ public class TradeColllect {
         System.out.println(ret);
     }
 
-    public static void main0(String[] args) throws Exception {
+    public static void main2(String[] args) throws Exception {
         // OrderNo terminalNo(devsId) method(TradeInformation/MemberActivation)
         System.out.println("开始了");
         int i = 0 ;
-        String path = "/Users/xiaoming/source/jushi/tools/src/main/java/com/polystone/test/new.txt";
+//        String path = "/Users/xiaoming/source/jushi/tools/src/main/java/com/polystone/test/new.txt";
+        String path = "D:/new.txt";
         BufferedReader reader = new BufferedReader(new FileReader(new File(path)));
         while(reader.ready()) {
             String jsonData = reader.readLine();

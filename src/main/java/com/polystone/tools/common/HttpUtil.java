@@ -1,15 +1,6 @@
 package com.polystone.tools.common;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.nio.charset.Charset;
-import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.NoHttpResponseException;
@@ -24,8 +15,12 @@ import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
@@ -35,6 +30,17 @@ import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
+import java.security.cert.X509Certificate;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 /**
  * http请求工具类
@@ -297,21 +303,19 @@ public class HttpUtil {
      *
      * @return [参数说明]
      */
-    public static String doPost(String apiUrl, Map<String, Object> headers, String json) {
-        if (StringUtil.isEmpty(json)) {
-            return null;
-        }
+    public static String doPost(String apiUrl, Map<String, String> headers, String json) {
         HttpPost httpPost = new HttpPost(apiUrl);
         httpPost.setConfig(requestConfig);
-        for (Map.Entry<String, Object> entry : headers.entrySet()) {
-            httpPost.setHeader(entry.getKey(), entry.getValue() + "");
+        for (Map.Entry<String, String> entry : headers.entrySet()) {
+            httpPost.setHeader(entry.getKey(), entry.getValue());
         }
         //解决中文乱码问题
-        StringEntity stringEntity = new StringEntity(json, UTF8);
-        stringEntity.setContentEncoding(UTF8);
-        stringEntity.setContentType("application/json");
-        httpPost.setEntity(stringEntity);
-
+        if (StringUtil.isNotTrimEmpty(json)) {
+            StringEntity stringEntity = new StringEntity(json, UTF8);
+            stringEntity.setContentEncoding(UTF8);
+            stringEntity.setContentType("application/json");
+            httpPost.setEntity(stringEntity);
+        }
         return execute(httpPost, buildHttpClient());
     }
 
@@ -322,14 +326,14 @@ public class HttpUtil {
      *
      * @return [参数说明]
      */
-    public static String doPost(String apiUrl, Map<String, Object> headers, Map<String, Object> params) {
+    public static String doPost(String apiUrl, Map<String, String> headers, Map<String, Object> params) {
         if (isEmpty(params)) {
             return null;
         }
         HttpPost httpPost = new HttpPost(apiUrl);
         httpPost.setConfig(requestConfig);
-        for (Map.Entry<String, Object> entry : headers.entrySet()) {
-            httpPost.setHeader(entry.getKey(), entry.getValue() + "");
+        for (Map.Entry<String, String> entry : headers.entrySet()) {
+            httpPost.setHeader(entry.getKey(), entry.getValue());
         }
         List<NameValuePair> pairList = new ArrayList<>(params.size());
         for (Map.Entry<String, Object> entry : params.entrySet()) {
@@ -367,6 +371,35 @@ public class HttpUtil {
      * 发送 POST 请求（HTTP），JSON形式
      * @param params json对象
      */
+    public static String doPostFiles(String apiUrl, Map<String, String> headers, Map<String, File> params) {
+        if (isEmpty(params)) {
+            return null;
+        }
+        try {
+            HttpPost httpPost = new HttpPost(apiUrl);
+            httpPost.setConfig(requestConfig);
+            for (Map.Entry<String, String> entry : headers.entrySet()) {
+                httpPost.setHeader(entry.getKey(), entry.getValue());
+            }
+            MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+            builder.setCharset(java.nio.charset.Charset.forName("UTF-8"));
+            builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+            for(String key :params.keySet()){
+                builder.addBinaryBody(key,params.get(key));
+            }
+            HttpEntity entity =  builder.build();
+            httpPost.setEntity(entity);
+            return execute(httpPost, buildHttpClient());
+        } catch (Exception e) {
+            Log.error("http request post is error ", e);
+        }
+        return null;
+    }
+
+    /**
+     * 发送 POST 请求（HTTP），JSON形式
+     * @param params json对象
+     */
     public static String doPostFiles(String apiUrl, Map<String, File> params) {
         if (isEmpty(params)) {
             return null;
@@ -374,10 +407,14 @@ public class HttpUtil {
         try {
             HttpPost httpPost = new HttpPost(apiUrl);
             httpPost.setConfig(requestConfig);
+            MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+            builder.setCharset(java.nio.charset.Charset.forName("UTF-8"));
+            builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
             for(String key :params.keySet()){
-                FileEntity file = new FileEntity(params.get(key));
-                httpPost.setEntity(file);
+                builder.addBinaryBody(key,params.get(key));
             }
+            HttpEntity entity =  builder.build();
+            httpPost.setEntity(entity);
             return execute(httpPost, buildHttpClient());
         } catch (Exception e) {
             Log.error("http request post is error ", e);
