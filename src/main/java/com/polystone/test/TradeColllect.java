@@ -1,6 +1,7 @@
 package com.polystone.test;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.polystone.tools.common.HttpUtil;
 import com.polystone.tools.common.MD5Util;
 import com.polystone.tools.common.StringUtil;
@@ -29,11 +30,33 @@ public class TradeColllect {
         System.out.println(ret);
     }
 
+    public static void main1(String[] args) throws IOException {
+        String path = "C:\\Users\\Administrator\\Desktop\\web-2019-09-09-2.logs";
+        BufferedReader reader = new BufferedReader(new FileReader(new File(path)));
+        while(reader.ready()) {
+            String jsonData = reader.readLine();
+            if(jsonData==null || jsonData.trim().length()==0)continue;
+            Map<String,JSONArray> data = JSON.parseObject(jsonData,Map.class);
+            System.out.println(data.get("jsonData").getString(0));
+            System.out.println(data.get("oemId").getString(0));
+            System.out.println(data.get("checkValue").getString(0));
 
-    public static void main1(String[] args) {
+            Map<String,String> params = new HashMap<>();
+            params.put("jsonData", data.get("jsonData").getString(0));
+            params.put("oemId",data.get("oemId").getString(0));
+            params.put("checkValue",data.get("checkValue").getString(0));
+            System.out.println(params);
+            String ret = HttpUtil.doPost("http://remittance.51polystone.com/collect/public/auto/dpos/trade", params);
+            System.out.println(ret);
+        }
+        System.out.println("结束了,");
+    }
+
+
+    public static void main(String[] args) {
         String salt = "BnExnJd8UFyGd0bSEyNklPI3aaOQyttf";
         //termSn
-        String jsonData = "{\"tradeAmt\":\"268.00\",\"terminalNo\":\"410000032543003281610\",\"tsFlag\":\"1\",\"orderNo\":\"0802121712531885\",\"method\":\"TerminalActivation\",\"mchtCd\":\"999384510028055\",\"tradeFirstFlag\":\"0\",\"cardType\":\"2\",\"regDate\":\"20190802\",\"vipType\":\"00\",\"extSeqId\":\"00000001\",\"trademode\":\"0\",\"feeAmt\":\"142.36\",\"tradeTime\":\"20190802121712\",\"termSn\":\"410000032543003281610\",\"rspCode\":\"00\",\"stlmDate\":\"20190802\",\"isVipTrade\":\"2\",\"tradeStatus\":\"1\",\"from\":\"allinpay\",\"d0FeeAmt\":\"3.00\",\"tradeType\":\"1011\"}";
+        String jsonData = "{\"feeAmt\":\"60.56\",\"tradeType\":\"1011\",\"tradeStatus\":\"1\",\"tsFlag\":\"1\",\"extSeqId\":\"00000001\",\"rspCode\":\"00\",\"stlmDate\":\"20190922\",\"tradeTime\":\"20190922152951\",\"terminalNo\":\"10587973\",\"regDate\":\"20190922\",\"trademode\":\"0\",\"tradeFirstFlag\":\"0\",\"cardType\":\"2\",\"isVipTrade\":\"2\",\"orderNo\":\"0922152951269883\",\"d0FeeAmt\":\"3.00\",\"termSn\":\"9991970600784985\",\"method\":\"TradeInformation\",\"vipType\":\"01\",\"mchtCd\":\"999986610666486\",\"tradeAmt\":\"11069.72\"}";
 
         String checkValue = SecurityUtil.getInstance().getSHA256Str(jsonData+salt);
 
@@ -42,10 +65,12 @@ public class TradeColllect {
         params.put("checkValue", checkValue);
         System.out.println(params);
         String ret = HttpUtil.doPost("http://remittance.51polystone.com/collect/public/auto/allinpay/trade", params);
+//        String ret = HttpUtil.doPost("http://collect.51polystone.com/collect/public/allinpay/trade", params);
         System.out.println(ret);
+
     }
 
-    public static void main2(String[] args) throws Exception {
+    public static void main3(String[] args) throws Exception {
         // OrderNo terminalNo(devsId) method(TradeInformation/MemberActivation)
         System.out.println("开始了");
         int i = 0 ;
@@ -62,6 +87,7 @@ public class TradeColllect {
             params.put("checkValue",checkValue);
             System.out.println(params);
             String ret = HttpUtil.doPost("http://remittance.51polystone.com/collect/public/auto/freedomsdb/trade", params);
+//            String ret = HttpUtil.doPost("http://collect.51polystone.com/collect/public/auto/freedomsdb/trade", params);
             System.out.println(ret);
             i++;
         }
