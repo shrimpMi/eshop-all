@@ -279,6 +279,17 @@ public class HttpUtil {
      * @return 请求响应
      */
     public static String doPost(String apiUrl, String json, String charset) {
+        return doPost(apiUrl,json,charset,"application/json");
+    }
+
+    /**
+     * 发送 POST 请求，JSON形式
+     * @param apiUrl 请求地址
+     * @param json 参数或数据
+     * @param charset 编码格式
+     * @return 请求响应
+     */
+    public static String doPost(String apiUrl, String json, String charset ,String contentType) {
         if (StringUtil.isEmpty(json)) {
             return null;
         }
@@ -287,11 +298,11 @@ public class HttpUtil {
         //解决中文乱码问题
         StringEntity stringEntity = new StringEntity(json, charset);
         stringEntity.setContentEncoding(charset);
-        stringEntity.setContentType("application/json");
+        stringEntity.setContentType(contentType);
         httpPost.setEntity(stringEntity);
-
         return execute(httpPost, buildHttpClient());
     }
+
 
     /**
      * post请求
