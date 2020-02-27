@@ -6,9 +6,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.NoHttpResponseException;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.methods.*;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.conn.ConnectTimeoutException;
@@ -324,6 +322,62 @@ public class HttpUtil {
             httpPost.setEntity(stringEntity);
         }
         return execute(httpPost, buildHttpClient());
+    }
+
+    /**
+     * post请求
+     * 带请求头
+     *
+     * @return [参数说明]
+     */
+    public static String doPatch(String apiUrl,Map<String, String> headers, String json) {
+        HttpPatch http = new HttpPatch(apiUrl);
+        http.setConfig(requestConfig);
+        for (Map.Entry<String, String> entry : headers.entrySet()) {
+            http.setHeader(entry.getKey(), entry.getValue());
+        }
+        //解决中文乱码问题
+        if (StringUtil.isNotTrimEmpty(json)) {
+            StringEntity stringEntity = new StringEntity(json, UTF8);
+            stringEntity.setContentEncoding(UTF8);
+            stringEntity.setContentType("application/json");
+            http.setEntity(stringEntity);
+        }
+        return execute(http, buildHttpClient());
+    }
+    /**
+     * post请求
+     * 带请求头
+     * @return [参数说明]
+     */
+    public static String doPut(String apiUrl,Map<String, String> headers, String json) {
+        HttpPut http = new HttpPut(apiUrl);
+        http.setConfig(requestConfig);
+        for (Map.Entry<String, String> entry : headers.entrySet()) {
+            http.setHeader(entry.getKey(), entry.getValue());
+        }
+        //解决中文乱码问题
+        if (StringUtil.isNotTrimEmpty(json)) {
+            StringEntity stringEntity = new StringEntity(json, UTF8);
+            stringEntity.setContentEncoding(UTF8);
+            stringEntity.setContentType("application/json");
+            http.setEntity(stringEntity);
+        }
+        return execute(http, buildHttpClient());
+    }
+
+    /**
+     * post请求
+     * 带请求头
+     * @return [参数说明]
+     */
+    public static String doDelete(String apiUrl, Map<String, String> headers) {
+        HttpDelete http = new HttpDelete(apiUrl);
+        http.setConfig(requestConfig);
+        for (Map.Entry<String, String> entry : headers.entrySet()) {
+            http.setHeader(entry.getKey(), entry.getValue());
+        }
+        return execute(http, buildHttpClient());
     }
 
 
