@@ -27,6 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
@@ -456,6 +457,37 @@ public class HttpUtil {
         }
         return null;
     }
+
+
+    /**
+     * 发送 POST 请求（HTTP），JSON形式
+     * @param params json对象
+     */
+    public static String doPostIOStream(String apiUrl, Map<String, String> headers, Map<String,InputStream> params) {
+        if (isEmpty(params)) {
+            return null;
+        }
+        try {
+            HttpPost httpPost = new HttpPost(apiUrl);
+            httpPost.setConfig(requestConfig);
+            for (Map.Entry<String, String> entry : headers.entrySet()) {
+                httpPost.setHeader(entry.getKey(), entry.getValue());
+            }
+            MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+            builder.setCharset(java.nio.charset.Charset.forName("UTF-8"));
+            builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+            for(String key :params.keySet()){
+                builder.addBinaryBody(key,params.get(key));
+            }
+            HttpEntity entity =  builder.build();
+            httpPost.setEntity(entity);
+            return execute(httpPost, buildHttpClient());
+        } catch (Exception e) {
+            Log.error("http request post is error ", e);
+        }
+        return null;
+    }
+
 
     /**
      * 发送 POST 请求（HTTP），JSON形式

@@ -6,7 +6,7 @@
 
     <groupId>com.polystone</groupId>
     <artifactId>tools</artifactId>
-    <version>1.0.4</version>
+    <version>1.0.5</version>
     <packaging>jar</packaging>
     <description>工具类</description>
 
@@ -193,15 +193,12 @@
             <artifactId>fastjson</artifactId>
             <version>${fastjson.version}</version>
         </dependency>
-
-
         <!-- https://mvnrepository.com/artifact/com.google.zxing/core -->
         <dependency>
             <groupId>com.google.zxing</groupId>
             <artifactId>core</artifactId>
             <version>3.3.3</version>
         </dependency>
-
     </dependencies>
     
 </project>
