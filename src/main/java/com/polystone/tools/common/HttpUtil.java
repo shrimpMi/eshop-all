@@ -13,6 +13,7 @@ import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
@@ -447,7 +448,7 @@ public class HttpUtil {
             builder.setCharset(java.nio.charset.Charset.forName("UTF-8"));
             builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
             for(String key :params.keySet()){
-                builder.addBinaryBody(key,params.get(key));
+                builder.addBinaryBody(key,params.get(key), ContentType.MULTIPART_FORM_DATA,params.get(key).getName());
             }
             HttpEntity entity =  builder.build();
             httpPost.setEntity(entity);
@@ -474,8 +475,6 @@ public class HttpUtil {
                 httpPost.setHeader(entry.getKey(), entry.getValue());
             }
             MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-            builder.setCharset(java.nio.charset.Charset.forName("UTF-8"));
-            builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
             for(String key :params.keySet()){
                 builder.addBinaryBody(key,params.get(key));
             }
